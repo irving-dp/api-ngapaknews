@@ -1,0 +1,40 @@
+{
+  "name": "api-ngapaknews",
+  "version": "1.0.0",
+  "description": "News portal API using Node JS, Express JS, Mongo DB Atlas, JWT Auth",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irving-dp/api-ngapaknews.git"
+  },
+  "keywords": [
+    "ngapaknews",
+    "nodejs",
+    "expressjs",
+    "mongodb",
+    "jwtauth",
+    "API",
+    "restful"
+  ],
+  "author": "Irving Dian Pratama",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/irving-dp/api-ngapaknews/issues"
+  },
+  "homepage": "https://github.com/irving-dp/api-ngapaknews#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.4",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
