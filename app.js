@@ -30,10 +30,12 @@ app.use((req, res, next) => {
 });
 
 //init routes
-const kategori_berita_router = require('./api/routes/KategoriBeritaRoute.');
+const kategori_router = require('./api/routes/KategoriRoute.');
+const sub_kategori_router = require('./api/routes/SubKategoriRoute');
 
 //routes which should handle request
-app.use('/kategori-berita', kategori_berita_router);
+app.use('/kategori', kategori_router);
+app.use('/sub-kategori', sub_kategori_router);
 
 //Error handling request http not found
 app.use((req, res, next) => {

@@ -1,22 +1,22 @@
 const mongoose = require('mongoose');
-const KategoriBerita = require('../models/KategoriBerita');
+const Kategori = require('../models/Kategori');
 
 //get all kategori berita
-exports.getAll = (req, res, next) => {
-    KategoriBerita.find()
+exports.getData = (req, res, next) => {
+    Kategori.find()
     .exec()
     .then( docs => {
         if( docs.length > 0 ){
             const response = {
                 count: docs.length,
-                kategori_berita : docs.map(doc => {
+                kategori : docs.map(doc => {
                     return {
                         id: doc._id,
                         nama:doc.nama,
                         created_at: doc.created_at,
                         request:{
                             type:'GET',
-                            url: 'http://localhost:3000/kategori-berita/' + doc._id
+                            url: 'http://localhost:3000/kategori/' + doc._id
                         }
                     }
                 })
@@ -37,17 +37,17 @@ exports.getAll = (req, res, next) => {
 }
 
 //show detail data
-exports.show = (req, res, next) => {
-    const id = req.params.kategori_berita_id;
-    KategoriBerita.findById(id)
+exports.getDataById = (req, res, next) => {
+    const id = req.params.id;
+    Kategori.findById(id)
     .exec()
     .then( doc => {
         if(doc){
             res.status(200).json({
-                kategori_berita: doc,
+                kategori: doc,
                 request: {
                     type:'GET',
-                    url: 'http://localhost:3000/kategori-berita/'
+                    url: 'http://localhost:3000/kategori/'
                 }
             })
         }else {
@@ -66,21 +66,21 @@ exports.show = (req, res, next) => {
 
 //store data
 exports.store = (req, res, next) => {
-    const kategori_berita = new KategoriBerita({
+    const kategori = new Kategori({
         _id: new mongoose.Types.ObjectId(),
         nama: req.body.nama
     });
 
-    kategori_berita.save()
+    kategori.save()
     .then( result => {
         res.status(201).json({
             message: "Created Data Successfuly !",
-            created_kategori_berita:{
+            created_kategori:{
                 id: result._id,
                 nama: result.nama,
                 request:{
                     type: 'GET',
-                    url: 'http://localhost:3000/kategori-berita/' + result._id
+                    url: 'http://localhost:3000/kategori/' + result._id
                 }
             }
         });
@@ -95,21 +95,18 @@ exports.store = (req, res, next) => {
 
 //update data 
 exports.update = (req, res, next) => {
-    const id = req.params.kategori_berita_id;
+    const id = req.params.id;
     const updateOps = {};
     for( const ops of req.body){
         updateOps[ops.propName] = ops.value;
     } 
 
-    KategoriBerita.update({_id: id}, {$set:updateOps})
+    Kategori.update({_id: id}, {$set:updateOps})
     .exec()
     .then(result => {
         res.status(200).json({
             message:"Data Updated !",
-            request:{
-                type: 'GET',
-                url: 'http://localhost:3000/kategori-berita/' + id
-            } 
+            
         });
     })
     .catch(err => {
@@ -122,23 +119,23 @@ exports.update = (req, res, next) => {
 
 //delete data
 exports.delete = (req, res, next) => {
-    const id = req.params.kategori_berita_id;
-    KategoriBerita.findById(id)
+    const id = req.params.id;
+    Kategori.findById(id)
     .exec()
     .then( doc => {
-        if(!doc){
+        if( !doc ){
             return res.status(404).json({
                 message:"Data Not Found !"
             })
         }
-        KategoriBerita.remove( {_id: id} )
+        Kategori.remove( {_id: id} )
         .exec()
         .then( result => {
             res.status(200).json({
                 message:"Data Has Deleted !",
                 request:{
                     type:"POST",
-                    url: "http://localhost:3000/kategori-berita/",
+                    url: "http://localhost:3000/kategori/",
                     body:{
                         nama:"String"
                     }
