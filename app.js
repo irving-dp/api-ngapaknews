@@ -29,13 +29,15 @@ app.use((req, res, next) => {
     next();
 });
 
-//init routes
-const kategori_router = require('./api/routes/KategoriRoute.');
-const sub_kategori_router = require('./api/routes/SubKategoriRoute');
+//initial routes
+const kategori_router       = require('./api/routes/KategoriRoute.');
+const sub_kategori_router   = require('./api/routes/SubKategoriRoute');
+const event_kategori_router = require('./api/routes/EventKategoriRoute');
 
 //routes which should handle request
 app.use('/kategori', kategori_router);
 app.use('/sub-kategori', sub_kategori_router);
+app.use('/event-kategori', event_kategori_router);
 
 //Error handling request http not found
 app.use((req, res, next) => {

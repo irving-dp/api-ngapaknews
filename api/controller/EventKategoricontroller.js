@@ -1,23 +1,23 @@
-const mongoose = require('mongoose');
-const SubKategori = require('../models/SubKategori');
+const mongoose      = require('mongoose');
+const EventKategori = require('../models/EventKategori');
 
-// get all sub kategori
+//get all data event kategori
 exports.getData = (req, res, next) => {
-    SubKategori.find()
+    EventKategori.find()
     .exec()
     .then( docs => {
         if( docs.length > 0 ){
             const response = {
-                count: docs.length,
-                sub_kategori: docs.map( doc => {
+                count           : docs.length,
+                event_kategori  : docs.map( doc => {
                     return {
-                        id: doc._id,
-                        kategori_id: doc.kategori_id,
-                        nama: doc.nama,
-                        status: doc.status,
-                        request: {
-                            type:'GET',
-                            url: 'http://localhost:3000/sub-kategori/' + doc._id
+                        id          : doc.id,
+                        kategori_id : doc.kategori_id,
+                        nama        : doc.nama,
+                        status      : doc.status,
+                        request     :{
+                            type: 'GET',
+                            url: 'http://localhost:3000/event-kategori/' + doc._id
                         }
                     }
                 })
@@ -40,22 +40,22 @@ exports.getData = (req, res, next) => {
 //show detail data
 exports.getDataById = (req, res, next) => {
     const id    = req.params.id;
-    SubKategori.findById(id)
+    EventKategori.findById(id)
     .exec()
     .then( doc => {
         if(doc){
             const response = {
-                sub_kategori: {
-                    id: doc._id,
-                    kategori_id: doc.kategori_id,
-                    nama: doc.nama,
-                    status: doc.status                        
+                sub_kategori:{
+                    id          : doc._id,
+                    kategori_id : doc.kategori_id,
+                    nama        : doc.nama,
+                    status      : doc.status
                 },
                 request: {
                     type: 'GET',
-                    url: 'http://localhost:3000/sub-kategori/'
+                    url: 'http://localhost:3000/event-kategori/'
                 }                  
-            } 
+            }
             res.status(200).json(response);               
         }else{
             res.status(404).json({
@@ -63,7 +63,7 @@ exports.getDataById = (req, res, next) => {
             });
         }
     })
-    .catch( err => {
+    .catch(err => {
         console.log(err);
         res.status(500).json({
             error:err
@@ -71,34 +71,35 @@ exports.getDataById = (req, res, next) => {
     });
 }
 
-//store data
 exports.store = (req, res, next) => {
-    const sub_kategori = new SubKategori({
+    const event_kategori = new EventKategori({
         _id         : new mongoose.Types.ObjectId(),
         kategori_id : req.body.kategori_id,
         nama        : req.body.nama,
         status      : req.body.status
     });
 
-    sub_kategori.save()
+    event_kategori.save()
     .then( result => {
-        res.status(201).json({
-            message: "Created data sucessfuly",
-            created_data:{
-                id: result._id,
-                nama: result.nama,
-                status: result.status,
+        const response = {
+            message: "Created data successfuly !",
+            created_data    : {
+                id          : result._id,
+                kategori_id : result.kategori_id,
+                nama        : result.nama,
+                status      : result.status,
                 request: {
                     type: 'GET',
-                    url: 'http://localhost:3000/sub-kategori/' + result._id
+                    url: 'http://localhost:3000/event-kategori/' + result._id
                 }
             }
-        });
+        }
+        res.status(201).json(response);
     })
     .catch( err => {
         console.log(err);
         res.status(500).json({
-            error:err
+            error: err
         });
     });
 }
@@ -110,17 +111,17 @@ exports.update = (req, res, next) => {
     for( const ops of req.body ){
         UpdateOps[ops.propName] = ops.value;
     }
-
-    SubKategori.update({_id: id}, {$set:UpdateOps})
+    
+    EventKategori.update({_id: id}, {$set:UpdateOps})
     .exec()
     .then( result => {
         res.status(200).json({
-            message:"Data Updated !",
+            message:"Data updated !",
             request: {
                 type: 'GET',
-                url: 'http://localhost:3000/sub-kategori/' + id
+                url: 'http://localhost:3000/event-kategori/' + id
             } 
-        })   
+        })
     })
     .catch(err => {
         console.log(err);
@@ -128,34 +129,34 @@ exports.update = (req, res, next) => {
             error:err
         });
     });
-}    
+}
 
 //delete data
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    SubKategori.findById(id)
+    EventKategori.findById(id)
     .exec()
     .then( doc => {
         if( !doc ){
             return res.status(404).json({
                 message:"Data not found !"
-            })
+            });
         }
-        SubKategori.remove({ _id:id})
+        EventKategori.remove({ _id:id })
         .exec()
         .then( result => {
             res.status(200).json({
-                message:"Data has deleted !",
-                request:{
-                    type:"POST",
-                    url: "http://localhost:3000/sub-kategori/",
+                message: "Data has deleted !",
+                request: {
+                    type: "POST",
+                    url: "http://localhost:3000/event-kategori/",
                     body: {
-                        nama: "String"
+                        nama: "String",
+                        status: "Integer"
                     }
                 }
-            })
-
-        })
+            });
+        })        
     })
     .catch(err => {
         console.log(err);
@@ -164,3 +165,4 @@ exports.delete = (req, res, next) => {
         });
     });
 }
+
